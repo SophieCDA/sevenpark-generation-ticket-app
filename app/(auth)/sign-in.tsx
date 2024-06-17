@@ -45,11 +45,8 @@ const SignIn: React.FC = () => {
           <Image
             source={images.logo}
             resizeMode="contain"
-            className="w-[115px] h-[34px]"
+            className="w-[100%] h-[94px] justify-center justify-items-center"
           />
-          <Text className="text-2xl text-white text-semibold mt-10 font-psemibold">
-            Log in to Aora
-          </Text>
           <FormField
             title="Identifiant"
             placeholder="Identifiant"
@@ -72,7 +69,7 @@ const SignIn: React.FC = () => {
             otherStyles="mt-7"
           />
           <CustomButton
-            title="Sign In"
+            title="Connexion"
             handlePress={submit}
             containerStyles="mt-7"
             isLoading={isSubmitting}

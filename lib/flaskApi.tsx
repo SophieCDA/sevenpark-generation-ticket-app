@@ -5,7 +5,7 @@ const API_BASE_URL = "http://10.81.200.132:5000"; // Remplacez par l'URL de votr
 
 interface SignInResponse {
   Authorization: string;
-  // Ajoutez d'autres propriétés de la réponse si nécessaire
+  nom_utilisateur: string;
 }
 
 export const signIn = async (
@@ -20,8 +20,10 @@ export const signIn = async (
       api_key,
     });
     if (response.status === 202) {
-      const token = response.data.Authorization;
+      const { Authorization: token, nom_utilisateur } = response.data;
+      console.log(response.data);
       await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("nom_utilisateur", nom_utilisateur);
       return response.data;
     } else {
       throw new Error("Invalid response from server");
@@ -33,9 +35,12 @@ export const signIn = async (
 
 export const signOut = async (): Promise<void> => {
   await AsyncStorage.removeItem("token");
+  await AsyncStorage.removeItem("nom_utilisateur");
 };
 
 export const getCurrentUser = async (): Promise<any> => {
   const token = await AsyncStorage.getItem("token");
   if (!token) return null;
+  const nomUtilisateur = await AsyncStorage.getItem("nom_utilisateur");
+  return { token, nomUtilisateur };
 };

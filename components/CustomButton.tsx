@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, GestureResponderEvent } from "react-native";
 interface CustomButtonProps {
   title: string;
   handlePress: (event: GestureResponderEvent) => void;
-  isLoading: boolean;
+  isLoading?: boolean;
   containerStyles?: string;
   textStyles?: string;
 }

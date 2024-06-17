@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Tabs } from "expo-router";
 import icons from "@/constants/icons";
 
@@ -60,6 +60,7 @@ const TabsLayout: React.FC = () => {
             ),
           }}
         />
+
         {/* <Tabs.Screen
           name="bookmark"
           options={{
@@ -90,7 +91,7 @@ const TabsLayout: React.FC = () => {
             ),
           }}
         /> */}
-        {/* <Tabs.Screen
+        <Tabs.Screen
           name="profile"
           options={{
             title: "Profile",
@@ -104,7 +105,7 @@ const TabsLayout: React.FC = () => {
               />
             ),
           }}
-        /> */}
+        />
       </Tabs>
     </>
   );

@@ -42,7 +42,7 @@ const Welcome: React.FC = () => {
         <View className="w-full flex justify-center items-center h-full px-4">
           <Image
             source={images.logo}
-            className="w-[330px] h-[104px]"
+            className="w-[430px] h-[134px]"
             resizeMode="contain"
           />
           <View className="relative mt-5">
@@ -57,7 +57,7 @@ const Welcome: React.FC = () => {
             />
           </View>
           <CustomButton
-            title="Connexion"
+            title="Se connecter"
             handlePress={() => router.push("/sign-in")}
             containerStyles="w-full mt-7"
           />
