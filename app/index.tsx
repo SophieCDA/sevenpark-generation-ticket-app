@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import { View, Text, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import images from "../constants/images";
 import CustomButton from "../components/CustomButton";
 
 const Welcome: React.FC = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        router.replace("/home");
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-primary">
+        <Text className="text-white">Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView className="bg-primary h-full">

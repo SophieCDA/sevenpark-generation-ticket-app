@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import images from "../../constants/images";
 import FormField from "@/components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { signIn } from "../../lib/flaskApi";
 
 interface Form {
@@ -29,13 +29,8 @@ const SignIn: React.FC = () => {
     setIsSubmitting(true);
     try {
       await signIn(form.identifiant, form.password, form.api_key);
-
-      // const result = await getCurrentUser();
-      // setUser(result);
-      // setIsLogged(true);
-
-      router.replace("/home");
       Alert.alert("Connexion réussie");
+      router.replace("/home");
     } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {
@@ -80,7 +75,7 @@ const SignIn: React.FC = () => {
             title="Sign In"
             handlePress={submit}
             containerStyles="mt-7"
-            // isLoading={isSubmitting}
+            isLoading={isSubmitting}
           />
         </View>
       </ScrollView>
