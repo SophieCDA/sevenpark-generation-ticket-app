@@ -8,6 +8,7 @@ interface SignInResponse {
   Authorization: string;
   nom_utilisateur: string;
   id_utilisateur: number;
+  is_admin: boolean;
 }
 
 export const signIn = async (
@@ -26,6 +27,7 @@ export const signIn = async (
         Authorization: token,
         nom_utilisateur,
         id_utilisateur,
+        is_admin,
       } = response.data;
       console.log(response.data);
       await AsyncStorage.setItem("token", token);
@@ -34,6 +36,7 @@ export const signIn = async (
         "id_utilisateur",
         JSON.stringify(id_utilisateur)
       );
+      await AsyncStorage.setItem("is_admin", JSON.stringify(is_admin));
       return response.data;
     } else {
       throw new Error("Invalid response from server");
@@ -96,6 +99,46 @@ export const getAllUsers = async (): Promise<any> => {
       return response.data;
     } else {
       throw new Error("Failed to fetch user info");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const addUser = async (
+  nom_utilisateur: string,
+  identifiant: string,
+  password: string,
+  api_key: string,
+  is_admin: boolean,
+  as_date_validity: boolean,
+  date_fin_validite?: string
+): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const data = {
+      nom_utilisateur,
+      identifiant,
+      password,
+      api_key,
+      is_admin,
+      as_date_validity,
+      ...(as_date_validity && { date_fin_validite }), // Add date_fin_validite only if as_date_validity is true
+    };
+
+    const response = await axios.post(`${API_BASE_URL}/utilisateurs`, data, {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 201) {
+      Alert.alert("Utilisateur créé");
+    } else {
+      throw new Error("Invalid response from server");
     }
   } catch (error: any) {
     throw new Error(error.message);

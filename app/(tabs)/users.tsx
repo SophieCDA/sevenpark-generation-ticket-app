@@ -10,9 +10,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllUsers } from "@/lib/flaskApi";
 import EmptyState from "@/components/EmptyState";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import useFlaskApi from "@/hooks/useFlaskApi";
 import UserCard from "@/components/UserCard";
+import CustomButton from "@/components/CustomButton";
 
 const Users = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -45,6 +46,14 @@ const Users = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
+      <View className="w-full justify-center px-4 my-6">
+        <CustomButton
+          title="Ajouter un utilisateur"
+          handlePress={() => router.push("/create-user")}
+          containerStyles="w-full my-5"
+        />
+      </View>
+
       <StatusBar backgroundColor="#161622" />
     </SafeAreaView>
   );
