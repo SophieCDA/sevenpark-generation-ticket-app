@@ -88,6 +88,12 @@ const TabsLayout: React.FC = () => {
         }}
       />
       <Tabs.Screen
+        name="create-user"
+        options={{
+          href: null
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Mon compte",

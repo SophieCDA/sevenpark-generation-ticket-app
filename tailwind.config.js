@@ -10,6 +10,7 @@ module.exports = {
           100: "#0056D2", // Variante de bleu plus foncé
           200: "#003FA6", // Variante de bleu encore plus foncé
         },
+        warn: "#f44336",
         black: {
           DEFAULT: "#000",
           100: "#1E1E2D",

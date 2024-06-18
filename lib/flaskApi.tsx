@@ -145,6 +145,25 @@ export const addUser = async (
   }
 };
 
+export const deleteUser = async (id_utilisateur: number): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    await axios.delete(`${API_BASE_URL}/utilisateurs`, {
+      params: {
+        id_utilisateur: id_utilisateur,
+      },
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export const updatePassword = async (password: string): Promise<any> => {
   try {
     const idUtilisateur = await AsyncStorage.getItem("id_utilisateur");
@@ -168,6 +187,46 @@ export const updatePassword = async (password: string): Promise<any> => {
       Alert.alert("Mot de passe modifié avec succès");
     } else {
       throw new Error("Failed to update password");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+interface UpdateUserParams {
+  id_utilisateur: number;
+  nom_utilisateur: string;
+  as_date_validity: boolean;
+  date_fin_validite: string;
+  api_key: string;
+  identifiant: string;
+  password: string;
+  is_admin: boolean;
+}
+
+export const updateUser = async (userData: UpdateUserParams): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.patch(
+      `${API_BASE_URL}/utilisateurs`,
+      userData,
+      {
+        params: {
+          id_utilisateur: userData.id_utilisateur,
+        },
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to update user");
     }
   } catch (error: any) {
     throw new Error(error.message);
