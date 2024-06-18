@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image } from "react-native";
 import { Tabs } from "expo-router";
 import icons from "@/constants/icons";
 
@@ -60,47 +60,31 @@ const TabsLayout: React.FC = () => {
             ),
           }}
         />
-
-        {/* <Tabs.Screen
-          name="bookmark"
+        <Tabs.Screen
+          name="users"
           options={{
-            title: "Bookmark",
+            title: "Utilisateurs",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.bookmark}
+                icon={icons.profile}
                 color={color}
-                name="Bookmark"
+                name="Utilisateurs"
                 focused={focused}
               />
             ),
           }}
         />
         <Tabs.Screen
-          name="create"
-          options={{
-            title: "Create",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.plus}
-                color={color}
-                name="Create"
-                focused={focused}
-              />
-            ),
-          }}
-        /> */}
-        <Tabs.Screen
           name="profile"
           options={{
-            title: "Profile",
+            title: "Mon compte",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.profile}
+                icon={icons.param}
                 color={color}
-                name="Profile"
+                name="Mon compte"
                 focused={focused}
               />
             ),

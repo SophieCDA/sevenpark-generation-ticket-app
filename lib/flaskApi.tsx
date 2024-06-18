@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Alert } from "react-native";
 
-const API_BASE_URL = "http://192.168.1.15:5000";
+const API_BASE_URL = "http://10.81.200.9:5000";
 
 interface SignInResponse {
   Authorization: string;
@@ -82,6 +82,26 @@ export const getUserInfo = async (): Promise<any> => {
   }
 };
 
+export const getAllUsers = async (): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.get(`${API_BASE_URL}/utilisateurs`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch user info");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export const updatePassword = async (password: string): Promise<any> => {
   try {
     const idUtilisateur = await AsyncStorage.getItem("id_utilisateur");
@@ -97,7 +117,7 @@ export const updatePassword = async (password: string): Promise<any> => {
         params: { id_utilisateur: idUtilisateur },
         headers: {
           Authorization: `${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       }
     );
