@@ -5,50 +5,102 @@ import {
   StatusBar,
   RefreshControl,
   Alert,
-  Modal,
+  Text,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getAllSites, deleteSite, getAllUsers } from "@/lib/flaskApi"; // Assurez-vous d'importer la fonction pour obtenir les utilisateurs
+import {
+  getAllSites,
+  getSitesByUser,
+  deleteSite,
+  getAllUsers,
+  getCurrentUser,
+} from "@/lib/flaskApi";
 import EmptyState from "@/components/EmptyState";
 import { router, useFocusEffect } from "expo-router";
-import useFlaskApi from "@/hooks/useFlaskApi";
 import CustomButton from "@/components/CustomButton";
 import SiteCard from "@/components/SiteCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+interface Site {
+  id_site: number;
+  nom_site: string;
+  code_site: string;
+  date_creation: string;
+  date_modification: string;
+  id_utilisateur: number;
+}
+
+interface User {
+  id_utilisateur: number;
+  nom_utilisateur: string;
+}
 
 const Sites = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const [editSite, setEditSite] = useState<any>(null);
-  const { data: sites, isLoading, refetch } = useFlaskApi(getAllSites);
-  const [users, setUsers] = useState([]);
+  const [editSite, setEditSite] = useState<Site | null>(null);
+  const [sites, setSites] = useState<Site[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
+        const currentUser = await getCurrentUser();
         const usersData = await getAllUsers();
         setUsers(usersData);
+
+        let sitesData;
+        if (currentUser.is_admin) {
+          sitesData = await getAllSites();
+        } else {
+          sitesData = await getSitesByUser(currentUser.id_utilisateur);
+        }
+        setSites(sitesData);
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch users");
+        Alert.alert("Error", "Failed to fetch data");
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchUsers();
+    const checkAdminStatus = async () => {
+      const adminStatus = await AsyncStorage.getItem("is_admin");
+      setIsAdmin(adminStatus === "1");
+    };
+
+    checkAdminStatus();
+    fetchData();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
+      refetchSites();
     }, [])
   );
 
-  const onRefresh = () => {
+  const refetchSites = async () => {
     setRefreshing(true);
-    refetch().finally(() => setRefreshing(false));
+    try {
+      const currentUser = await getCurrentUser();
+      let sitesData;
+      if (currentUser.is_admin) {
+        sitesData = await getAllSites();
+      } else {
+        sitesData = await getSitesByUser(currentUser.id_utilisateur);
+      }
+      setSites(sitesData);
+    } catch (error) {
+      Alert.alert("Error", "Failed to refresh sites");
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const handleDeleteSite = async (id: number) => {
     try {
       await deleteSite(id);
-      refetch();
+      refetchSites();
     } catch (error: any) {
       Alert.alert("Error", error.message);
     }
@@ -58,6 +110,14 @@ const Sites = () => {
     setEditSite(null);
   };
 
+  if (isLoading) {
+    return (
+      <View className="bg-primary h-full justify-center items-center">
+        <Text className="text-white">Chargement...</Text>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
@@ -66,7 +126,7 @@ const Sites = () => {
         renderItem={({ item }) => (
           <SiteCard
             site={item}
-            users={users} // Passer la liste des utilisateurs
+            users={users}
             onDelete={handleDeleteSite}
             onEdit={(site) => setEditSite(site)}
           />
@@ -78,15 +138,17 @@ const Sites = () => {
           />
         )}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={refetchSites} />
         }
       />
       <View className="w-full justify-center px-4 my-6">
-        <CustomButton
-          title="Ajouter un site"
-          handlePress={() => router.push("/(tabs)/create-user")}
-          containerStyles="w-full my-5"
-        />
+        {isAdmin && (
+          <CustomButton
+            title="Ajouter un site"
+            handlePress={() => router.push("/(tabs)/create-user")}
+            containerStyles="w-full my-5"
+          />
+        )}
       </View>
       <StatusBar backgroundColor="#161622" />
     </SafeAreaView>

@@ -257,6 +257,28 @@ export const getAllSites = async (): Promise<any> => {
   }
 };
 
+export const getSitesByUser = async (id_utilisateur: number): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.get(`${API_BASE_URL}/sites`, {
+      params: { id_utilisateur },
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch sites");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export const deleteSite = async (id_site: number): Promise<any> => {
   try {
     const token = await AsyncStorage.getItem("token");
