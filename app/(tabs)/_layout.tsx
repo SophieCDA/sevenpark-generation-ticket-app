@@ -72,6 +72,21 @@ const TabsLayout: React.FC = () => {
         }}
       />
       <Tabs.Screen
+        name="sites"
+        options={{
+          title: "Sites",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.profile}
+              color={color}
+              name="Sites"
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="users"
         options={{
           title: "Utilisateurs",
@@ -90,7 +105,7 @@ const TabsLayout: React.FC = () => {
       <Tabs.Screen
         name="create-user"
         options={{
-          href: null
+          href: null,
         }}
       />
       <Tabs.Screen

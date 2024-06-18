@@ -1,41 +1,48 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
-import images from "@/constants/images";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
-interface UserCardProps {
-  user: {
-    id_utilisateur: number;
-    nom_utilisateur: string;
-    as_date_validity: boolean;
-    date_fin_validite: string;
-    identifiant: string;
+interface SiteCardProps {
+  site: {
+    id_site: number;
+    nom_site: string;
+    code_site: string;
     date_creation: string;
     date_modification: string;
-    avatar: string;
+    id_utilisateur: number;
   };
+  users: {
+    id_utilisateur: number;
+    nom_utilisateur: string;
+  }[];
   onDelete: (id: number) => void;
-  onEdit: (user: any) => void; // Ajouter une prop pour l'édition
+  onEdit: (site: any) => void;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onEdit }) => {
-  const dateValidityString = user.as_date_validity ? "oui" : "non";
+const SiteCard: React.FC<SiteCardProps> = ({
+  site,
+  users,
+  onDelete,
+  onEdit,
+}) => {
+  const user = users.find((u) => u.id_utilisateur === site.id_utilisateur);
 
-  const userInfoResponse = `
-      Nom utilisateur : ${user.nom_utilisateur}\n
-      Identifiant : ${user.identifiant}\n
-      Date de validité : ${dateValidityString}\n
-      Fin de validité : ${user.date_fin_validite}\n
-      Date de création : ${user.date_creation} \n
-      Date de modification : ${user.date_modification}
+  const siteInfoResponse = `
+    Nom du site : ${site.nom_site}\n
+    Code du site : ${site.code_site}\n
+    Date de création : ${site.date_creation}\n
+    Date de modification : ${site.date_modification}\n
+    Nom de l'utilisateur : ${
+      user ? user.nom_utilisateur : "Utilisateur non trouvé"
+    }
   `;
 
   const handleAlert = () => {
-    Alert.alert("User Information", userInfoResponse);
+    Alert.alert("Informations du site", siteInfoResponse);
   };
 
   const handleEdit = () => {
-    onEdit(user); // Appeler la fonction de modification avec les données de l'utilisateur
+    onEdit(site); // Appeler la fonction de modification avec les données du site
   };
 
   const renderRightActions = () => {
@@ -56,9 +63,9 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onEdit }) => {
             width: 80,
             backgroundColor: "red",
           }}
-          onPress={() => onDelete(user.id_utilisateur)}
+          onPress={() => onDelete(site.id_site)}
         >
-          <Text style={{ color: "white" }}>Delete</Text>
+          <Text style={{ color: "white" }}>Supprimer</Text>
         </TouchableOpacity>
       </View>
     );
@@ -85,13 +92,20 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onEdit }) => {
                 className="text-white font-psemibold text-sm"
                 numberOfLines={1}
               >
-                {user.nom_utilisateur}
+                {site.nom_site}
               </Text>
               <Text
                 className="text-xs text-gray-100 font-pregular"
                 numberOfLines={1}
               >
-                ID: {user.identifiant}
+                Code: {site.code_site}
+              </Text>
+              <Text
+                className="text-xs text-gray-100 font-pregular"
+                numberOfLines={1}
+              >
+                Utilisateur:{" "}
+                {user ? user.nom_utilisateur : "Utilisateur non trouvé"}
               </Text>
             </View>
           </View>
@@ -109,4 +123,4 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onEdit }) => {
   );
 };
 
-export default UserCard;
+export default SiteCard;

@@ -236,3 +236,42 @@ export const updateUser = async (
     throw new Error(error.message);
   }
 };
+
+export const getAllSites = async (): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.get(`${API_BASE_URL}/sites`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch sites");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const deleteSite = async (id_site: number): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    await axios.delete(`${API_BASE_URL}/sites`, {
+      params: {
+        id_utilisateur: id_site,
+      },
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
