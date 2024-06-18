@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import images from "@/constants/images";
 import Swipeable from "react-native-gesture-handler/Swipeable";
+import { useNavigation } from "expo-router";
 
 interface UserCardProps {
   user: {
@@ -15,50 +16,63 @@ interface UserCardProps {
     avatar: string;
   };
   onDelete: (id: number) => void;
+  onEdit: (user: any) => void; // Ajouter une prop pour l'édition
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, onDelete }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onEdit }) => {
   const dateValidityString = user.as_date_validity ? "oui" : "non";
 
   const userInfoResponse = `
-        Nom utilisateur : ${user.nom_utilisateur}\n
-        Identifiant : ${user.identifiant}\n
-        Date de validité : ${dateValidityString}\n
-        Fin de validité : ${user.date_fin_validite}\n
-        Date de création : ${user.date_creation} \n
-        Date de modification : ${user.date_modification}
-    `;
+      Nom utilisateur : ${user.nom_utilisateur}\n
+      Identifiant : ${user.identifiant}\n
+      Date de validité : ${dateValidityString}\n
+      Fin de validité : ${user.date_fin_validite}\n
+      Date de création : ${user.date_creation} \n
+      Date de modification : ${user.date_modification}
+  `;
 
   const handleAlert = () => {
     Alert.alert("User Information", userInfoResponse);
+  };
+
+  const handleEdit = () => {
+    onEdit(user); // Appeler la fonction de modification avec les données de l'utilisateur
   };
 
   const renderRightActions = () => {
     return (
       <View
         style={{
-          justifyContent: "center",
+          justifyContent: "space-between",
           alignItems: "center",
-          width: 80,
+          width: 160,
           backgroundColor: "red",
+          flexDirection: "row",
         }}
       >
-        <Text style={{ color: "white" }}>Delete</Text>
+        <TouchableOpacity
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: 80,
+            backgroundColor: "red",
+          }}
+          onPress={() => onDelete(user.id_utilisateur)}
+        >
+          <Text style={{ color: "white" }}>Delete</Text>
+        </TouchableOpacity>
       </View>
     );
   };
 
   return (
-    <Swipeable
-      renderRightActions={renderRightActions}
-      onSwipeableOpen={() => onDelete(user.id_utilisateur)}
-    >
+    <Swipeable renderRightActions={renderRightActions}>
       <View className="flex-col items-center px-4 mb-14">
         <View className="flex-row gap-3 items-start">
           <View className="justify-center items-center flex-row flex-1">
             <View
               className={`w-[46px] h-[46px] rounded-lg border border-secondary
-                        flex justify-center items-center p-0.5`}
+                    flex justify-center items-center p-0.5`}
             >
               <Image
                 source={{ uri: images.profile }}
@@ -82,10 +96,12 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete }) => {
               </Text>
             </View>
           </View>
-
           <View className="pt-2">
             <TouchableOpacity onPress={handleAlert}>
               <Text className="text-sm text-blue-500">Info</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleEdit}>
+              <Text className="text-sm text-blue-500">Modifier</Text>
             </TouchableOpacity>
           </View>
         </View>

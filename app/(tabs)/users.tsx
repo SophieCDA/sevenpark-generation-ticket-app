@@ -15,6 +15,7 @@ import { router, useFocusEffect } from "expo-router";
 import useFlaskApi from "@/hooks/useFlaskApi";
 import UserCard from "@/components/UserCard";
 import CustomButton from "@/components/CustomButton";
+import UpdateUser from "@/components/UpdateUser";
 
 const Users = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -41,6 +42,10 @@ const Users = () => {
     }
   };
 
+  const handleCloseModal = () => {
+    setEditUser(null);
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
@@ -50,6 +55,7 @@ const Users = () => {
           <UserCard
             user={item}
             onDelete={handleDeleteUser}
+            onEdit={(user) => setEditUser(user)}
           />
         )}
         ListEmptyComponent={() => (
@@ -71,6 +77,14 @@ const Users = () => {
       </View>
 
       <StatusBar backgroundColor="#161622" />
+
+      <Modal visible={!!editUser} onRequestClose={handleCloseModal}>
+        <UpdateUser
+          id_utilisateur={editUser?.id_utilisateur}
+          user_data={editUser}
+          onClose={handleCloseModal}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Alert } from "react-native";
 
-const API_BASE_URL = "http://10.81.200.9:5000";
+const API_BASE_URL = "http://192.168.1.15:5000";
 
 interface SignInResponse {
   Authorization: string;
@@ -193,35 +193,39 @@ export const updatePassword = async (password: string): Promise<any> => {
   }
 };
 
-interface UpdateUserParams {
-  id_utilisateur: number;
-  nom_utilisateur: string;
-  as_date_validity: boolean;
-  date_fin_validite: string;
-  api_key: string;
-  identifiant: string;
-  password: string;
-  is_admin: boolean;
-}
-
-export const updateUser = async (userData: UpdateUserParams): Promise<any> => {
+export const updateUser = async (
+  id_utilisateur: string,
+  nom_utilisateur: string,
+  identifiant: string,
+  password: string,
+  api_key: string,
+  is_admin: boolean,
+  as_date_validity: boolean,
+  date_fin_validite?: string
+): Promise<any> => {
   try {
     const token = await AsyncStorage.getItem("token");
     if (!token) throw new Error("Token not found");
 
-    const response = await axios.patch(
-      `${API_BASE_URL}/utilisateurs`,
-      userData,
-      {
-        params: {
-          id_utilisateur: userData.id_utilisateur,
-        },
-        headers: {
-          Authorization: `${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const data = {
+      nom_utilisateur,
+      identifiant,
+      password,
+      api_key,
+      is_admin,
+      as_date_validity,
+      ...(as_date_validity && { date_fin_validite }),
+    };
+
+    const response = await axios.patch(`${API_BASE_URL}/utilisateurs`, data, {
+      params: {
+        id_utilisateur: id_utilisateur,
+      },
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (response.status === 200) {
       return response.data;
