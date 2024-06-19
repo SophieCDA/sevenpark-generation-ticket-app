@@ -12,7 +12,6 @@ interface UserCardProps {
     identifiant: string;
     date_creation: string;
     date_modification: string;
-    avatar: string;
   };
   onDelete: (id: number) => void;
   onEdit: (user: any) => void; // Ajouter une prop pour l'édition

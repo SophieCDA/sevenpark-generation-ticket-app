@@ -78,7 +78,7 @@ const TabsLayout: React.FC = () => {
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={icons.profile}
+              icon={icons.site}
               color={color}
               name="Sites"
               focused={focused}

@@ -20,6 +20,7 @@ import { router, useFocusEffect } from "expo-router";
 import CustomButton from "@/components/CustomButton";
 import SiteCard from "@/components/SiteCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SearchInput from "@/components/SearchInput"; // Importer SearchInput
 
 interface Site {
   id_site: number;
@@ -39,6 +40,7 @@ const Sites = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [editSite, setEditSite] = useState<Site | null>(null);
   const [sites, setSites] = useState<Site[]>([]);
+  const [filteredSites, setFilteredSites] = useState<Site[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -57,6 +59,7 @@ const Sites = () => {
           sitesData = await getSitesByUser(currentUser.id_utilisateur);
         }
         setSites(sitesData);
+        setFilteredSites(sitesData);
       } catch (error) {
         Alert.alert("Error", "Failed to fetch data");
       } finally {
@@ -90,6 +93,7 @@ const Sites = () => {
         sitesData = await getSitesByUser(currentUser.id_utilisateur);
       }
       setSites(sitesData);
+      setFilteredSites(sitesData);
     } catch (error) {
       Alert.alert("Error", "Failed to refresh sites");
     } finally {
@@ -120,8 +124,18 @@ const Sites = () => {
 
   return (
     <SafeAreaView className="bg-primary h-full">
+      <View className="w-full justify-center px-4 my-6">
+        <SearchInput
+          initialQuery=""
+          placeholder="Rechercher un site"
+          items={sites}
+          searchKey="nom_site"
+          onResultsChange={setFilteredSites} // Mettre à jour les résultats filtrés
+        />
+      </View>
+
       <FlatList
-        data={sites}
+        data={filteredSites}
         keyExtractor={(item) => item.id_site.toString()}
         renderItem={({ item }) => (
           <SiteCard
