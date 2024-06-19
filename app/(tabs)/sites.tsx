@@ -145,7 +145,7 @@ const Sites = () => {
         {isAdmin && (
           <CustomButton
             title="Ajouter un site"
-            handlePress={() => router.push("/(tabs)/create-user")}
+            handlePress={() => router.push("/sites/create")}
             containerStyles="w-full my-5"
           />
         )}

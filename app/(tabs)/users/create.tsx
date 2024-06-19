@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { View, Text, ScrollView, Alert, Switch } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import CustomButton from "@/components/CustomButton";
 import FormField from "@/components/FormField";
 import { addUser } from "@/lib/flaskApi";
@@ -36,7 +36,35 @@ const CreateUser: React.FC = () => {
     });
   }, [navigation]);
 
+  const validateForm = () => {
+    if (!form.nom_utilisateur.trim()) {
+      Alert.alert("Erreur", "Le nom d'utilisateur est requis");
+      return false;
+    }
+    if (!form.identifiant.trim()) {
+      Alert.alert("Erreur", "L'identifiant est requis");
+      return false;
+    }
+    if (!form.password.trim()) {
+      Alert.alert("Erreur", "Le mot de passe est requis");
+      return false;
+    }
+    if (!form.api_key.trim()) {
+      Alert.alert("Erreur", "La clé API est requise");
+      return false;
+    }
+    if (form.as_date_validity && !form.date_fin_validite.trim()) {
+      Alert.alert("Erreur", "La date de fin de validité est requise");
+      return false;
+    }
+    return true;
+  };
+
   const createUser = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       await addUser(

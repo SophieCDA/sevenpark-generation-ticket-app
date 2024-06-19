@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllUsers, deleteUser } from "@/lib/flaskApi";
 import EmptyState from "@/components/EmptyState";
-import { router, useFocusEffect } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import useFlaskApi from "@/hooks/useFlaskApi";
 import UserCard from "@/components/UserCard";
 import CustomButton from "@/components/CustomButton";
@@ -46,6 +46,10 @@ const Users = () => {
     setEditUser(null);
   };
 
+  const navigateAddUser = () => {
+    return <Link href="/create-user" asChild></Link>;
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
@@ -71,7 +75,7 @@ const Users = () => {
       <View className="w-full justify-center px-4 my-6">
         <CustomButton
           title="Ajouter un utilisateur"
-          handlePress={() => router.push("/(tabs)/create-user")}
+          handlePress={() => router.push("/users/create")}
           containerStyles="w-full my-5"
         />
       </View>

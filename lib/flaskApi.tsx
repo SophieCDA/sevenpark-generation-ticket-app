@@ -2,7 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Alert } from "react-native";
 
-const API_BASE_URL = "http://192.168.1.15:5000";
+// const API_BASE_URL = "http://192.168.1.15:5000"; // maison
+const API_BASE_URL = "http://10.81.200.14:5000"; // campus
 
 interface SignInResponse {
   Authorization: string;
@@ -293,6 +294,38 @@ export const deleteSite = async (id_site: number): Promise<any> => {
         "Content-Type": "application/json",
       },
     });
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const addSite = async (
+  nom_site: string,
+  code_site: number,
+  id_utilisateur: number
+): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const data = {
+      nom_site,
+      code_site,
+      id_utilisateur,
+    };
+
+    const response = await axios.post(`${API_BASE_URL}/sites`, data, {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 201) {
+      Alert.alert("Site créé");
+    } else {
+      throw new Error("Invalid response from server");
+    }
   } catch (error: any) {
     throw new Error(error.message);
   }

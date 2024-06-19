@@ -87,6 +87,12 @@ const TabsLayout: React.FC = () => {
         }}
       />
       <Tabs.Screen
+        name="sites/create"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
         name="users"
         options={{
           title: "Utilisateurs",
@@ -103,7 +109,7 @@ const TabsLayout: React.FC = () => {
         }}
       />
       <Tabs.Screen
-        name="create-user"
+        name="users/create"
         options={{
           href: null,
         }}

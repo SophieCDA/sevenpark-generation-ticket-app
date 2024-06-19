@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  GestureResponderEvent,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import icons from "../constants/icons";
 
 interface FormFieldProps {
@@ -14,8 +7,14 @@ interface FormFieldProps {
   value: string;
   placeholder: string;
   handleChangeText?: (text: string) => void;
-  otherStyles?: string; // Adjust this type according to your styles setup, if using a style object or array, change accordingly
+  otherStyles?: string;
   isDisabled?: boolean;
+  keyboardType?:
+    | "default"
+    | "email-address"
+    | "numeric"
+    | "phone-pad"
+    | "number-pad";
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -25,6 +24,7 @@ const FormField: React.FC<FormFieldProps> = ({
   handleChangeText,
   otherStyles = "",
   isDisabled = false,
+  keyboardType = "default",
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -45,6 +45,7 @@ const FormField: React.FC<FormFieldProps> = ({
           onChangeText={handleChangeText}
           secureTextEntry={title === "Mot de passe" && !showPassword}
           editable={!isDisabled}
+          keyboardType={keyboardType}
         />
         {title === "Mot de passe" && (
           <TouchableOpacity
