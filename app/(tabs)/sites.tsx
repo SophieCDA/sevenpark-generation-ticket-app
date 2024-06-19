@@ -6,6 +6,7 @@ import {
   RefreshControl,
   Alert,
   Text,
+  Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -21,6 +22,7 @@ import CustomButton from "@/components/CustomButton";
 import SiteCard from "@/components/SiteCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SearchInput from "@/components/SearchInput"; // Importer SearchInput
+import UpdateSite from "@/components/UpdateSite";
 
 interface Site {
   id_site: number;
@@ -38,7 +40,7 @@ interface User {
 
 const Sites = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const [editSite, setEditSite] = useState<Site | null>(null);
+  const [editSite, setEditSite] = useState<any>(null);
   const [sites, setSites] = useState<Site[]>([]);
   const [filteredSites, setFilteredSites] = useState<Site[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -114,14 +116,6 @@ const Sites = () => {
     setEditSite(null);
   };
 
-  if (isLoading) {
-    return (
-      <View className="bg-primary h-full justify-center items-center">
-        <Text className="text-white">Chargement...</Text>
-      </View>
-    );
-  }
-
   return (
     <SafeAreaView className="bg-primary h-full">
       <View className="w-full justify-center px-4 my-6">
@@ -165,6 +159,13 @@ const Sites = () => {
         )}
       </View>
       <StatusBar backgroundColor="#161622" />
+      <Modal visible={!!editSite} onRequestClose={handleCloseModal}>
+        <UpdateSite
+          id_site={editSite?.id_site}
+          site_data={editSite}
+          onClose={handleCloseModal}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };

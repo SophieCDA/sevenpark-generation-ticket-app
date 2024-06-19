@@ -330,3 +330,39 @@ export const addSite = async (
     throw new Error(error.message);
   }
 };
+
+export const updateSite = async (
+  id_site: string,
+  nom_site: string,
+  code_site: string,
+  id_utilisateur: string
+): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const data = {
+      nom_site,
+      code_site,
+      id_utilisateur,
+    };
+
+    const response = await axios.patch(`${API_BASE_URL}/sites`, data, {
+      params: {
+        id_site: id_site,
+      },
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to update site");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
