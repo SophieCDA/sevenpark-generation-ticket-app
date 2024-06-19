@@ -100,7 +100,7 @@ const Parking = () => {
       <View className="w-full justify-center px-4 my-6">
         <SearchInput
           initialQuery=""
-          placeholder="Rechercher un site"
+          placeholder="Rechercher un parking"
           items={parkings}
           searchKey="nom_parking"
           onResultsChange={setFilteredParkings} // Mettre à jour les résultats filtrés
