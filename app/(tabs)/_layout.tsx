@@ -93,6 +93,21 @@ const TabsLayout: React.FC = () => {
         }}
       />
       <Tabs.Screen
+        name="parkings"
+        options={{
+          title: "Parkings",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.parking}
+              color={color}
+              name="Parkings"
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="users"
         options={{
           title: "Utilisateurs",

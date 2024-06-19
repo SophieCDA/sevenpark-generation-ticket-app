@@ -258,28 +258,6 @@ export const getAllSites = async (): Promise<any> => {
   }
 };
 
-export const getSitesByUser = async (id_utilisateur: number): Promise<any> => {
-  try {
-    const token = await AsyncStorage.getItem("token");
-    if (!token) throw new Error("Token not found");
-
-    const response = await axios.get(`${API_BASE_URL}/sites`, {
-      params: { id_utilisateur },
-      headers: {
-        Authorization: `${token}`,
-      },
-    });
-
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      throw new Error("Failed to fetch sites");
-    }
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
-};
-
 export const deleteSite = async (id_site: number): Promise<any> => {
   try {
     const token = await AsyncStorage.getItem("token");
@@ -362,6 +340,45 @@ export const updateSite = async (
     } else {
       throw new Error("Failed to update site");
     }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getAllParkings = async (): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.get(`${API_BASE_URL}/parking`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch parkings");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const deleteParking = async (id_parking: number): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    await axios.delete(`${API_BASE_URL}/parking`, {
+      params: {
+        id_parking: id_parking,
+      },
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error: any) {
     throw new Error(error.message);
   }

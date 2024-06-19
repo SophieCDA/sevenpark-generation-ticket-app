@@ -9,7 +9,7 @@ import {
   Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getAllSites, deleteSite, getAllUsers } from "@/lib/flaskApi";
+import { getAllParkings, deleteParking } from "@/lib/flaskApi";
 import EmptyState from "@/components/EmptyState";
 import { router, useFocusEffect } from "expo-router";
 import CustomButton from "@/components/CustomButton";
@@ -17,41 +17,35 @@ import SiteCard from "@/components/SiteCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SearchInput from "@/components/SearchInput"; // Importer SearchInput
 import UpdateSite from "@/components/UpdateSite";
+import ParkingCard from "@/components/ParkingCard";
 
-interface Site {
-  id_site: number;
-  nom_site: string;
-  code_site: string;
+interface Parking {
+  id_parking: number;
+  nom_parking: string;
+  adresse_parking: string;
+  code_postal_parking: string;
+  code_parking: number;
   date_creation: string;
   date_modification: string;
-  id_utilisateur: number;
+  id_ville: number;
+  id_site: number;
 }
 
-interface User {
-  id_utilisateur: number;
-  nom_utilisateur: string;
-}
-
-const Sites = () => {
+const Parking = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const [editSite, setEditSite] = useState<any>(null);
-  const [sites, setSites] = useState<Site[]>([]);
-  const [filteredSites, setFilteredSites] = useState<Site[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const [editParking, setEditParking] = useState<any>(null);
+  const [parkings, setParkings] = useState<Parking[]>([]);
+  const [filteredParkings, setFilteredParkings] = useState<Parking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersData = await getAllUsers();
-        setUsers(usersData);
-
-        let sitesData;
-        sitesData = await getAllSites();
-
-        setSites(sitesData);
-        setFilteredSites(sitesData);
+        let parkingsData;
+        parkingsData = await getAllParkings();
+        setParkings(parkingsData);
+        setFilteredParkings(parkingsData);
       } catch (error) {
         Alert.alert("Error", "Failed to fetch data");
       } finally {
@@ -77,10 +71,10 @@ const Sites = () => {
   const refetchSites = async () => {
     setRefreshing(true);
     try {
-      let sitesData;
-      sitesData = await getAllSites();
-      setSites(sitesData);
-      setFilteredSites(sitesData);
+      let parkingsData;
+      parkingsData = await getAllParkings();
+      setParkings(parkingsData);
+      setFilteredParkings(parkingsData);
     } catch (error) {
       Alert.alert("Error", "Failed to refresh sites");
     } finally {
@@ -90,16 +84,16 @@ const Sites = () => {
 
   const handleDeleteSite = async (id: number) => {
     try {
-      await deleteSite(id);
+      await deleteParking(id);
       refetchSites();
     } catch (error: any) {
       Alert.alert("Error", error.message);
     }
   };
 
-  const handleCloseModal = () => {
-    setEditSite(null);
-  };
+//   const handleCloseModal = () => {
+//     setEditSite(null);
+//   };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -107,21 +101,20 @@ const Sites = () => {
         <SearchInput
           initialQuery=""
           placeholder="Rechercher un site"
-          items={sites}
-          searchKey="nom_site"
-          onResultsChange={setFilteredSites} // Mettre à jour les résultats filtrés
+          items={parkings}
+          searchKey="nom_parking"
+          onResultsChange={setFilteredParkings} // Mettre à jour les résultats filtrés
         />
       </View>
 
       <FlatList
-        data={filteredSites}
-        keyExtractor={(item) => item.id_site.toString()}
+        data={filteredParkings}
+        keyExtractor={(item) => item.id_parking.toString()}
         renderItem={({ item }) => (
-          <SiteCard
-            site={item}
-            users={users}
+          <ParkingCard
+            parking={item}
             onDelete={handleDeleteSite}
-            onEdit={(site) => setEditSite(site)}
+            onEdit={(parking) => setEditParking(parking)}
           />
         )}
         ListEmptyComponent={() => (
@@ -144,15 +137,15 @@ const Sites = () => {
         )}
       </View>
       <StatusBar backgroundColor="#161622" />
-      <Modal visible={!!editSite} onRequestClose={handleCloseModal}>
+      {/* <Modal visible={!!editSite} onRequestClose={handleCloseModal}>
         <UpdateSite
           id_site={editSite?.id_site}
           site_data={editSite}
           onClose={handleCloseModal}
         />
-      </Modal>
+      </Modal> */}
     </SafeAreaView>
   );
 };
 
-export default Sites;
+export default Parking;
