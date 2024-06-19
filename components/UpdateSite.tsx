@@ -30,8 +30,8 @@ const UpdateSite: React.FC<UpdateSiteProps> = ({
     if (site_data) {
       setForm({
         nom_site: site_data.nom_site || "",
-        code_site: site_data.code_site || "",
-        id_utilisateur: site_data.id_utilisateur || "",
+        code_site: site_data.code_site.toString() || "",
+        id_utilisateur: site_data.id_utilisateur.toString() || "",
       });
     }
   }, [site_data]);
