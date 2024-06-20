@@ -46,8 +46,12 @@ const UpdateTicket: React.FC<UpdateTicketProps> = ({
             numero_ticket: ticket_data.numero_ticket || "",
             num_plaque: ticket_data.num_plaque || "",
             nom: ticket_data.nom || "",
-            is_valid: ticket_data.is_valid || false,
-            supprimer: ticket_data.supprimer || false,
+            is_valid:
+              ticket_data.is_valid !== undefined ? ticket_data.is_valid : false,
+            supprimer:
+              ticket_data.supprimer !== undefined
+                ? ticket_data.supprimer
+                : false,
             id_parking: ticket_data.id_parking.toString() || "",
           });
         }

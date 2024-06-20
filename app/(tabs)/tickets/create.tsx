@@ -128,6 +128,18 @@ const CreateTicket: React.FC = () => {
     }
   };
 
+  const handleParkingChange = (value: string) => {
+    const selectedParking = parkings.find(
+      (parking) => parking.nom_parking === value
+    );
+    if (selectedParking) {
+      setForm({
+        ...form,
+        id_parking: selectedParking.id_parking.toString(),
+      });
+    }
+  };
+
   const handleTypeTicketChange = (value: string) => {
     const selectedTicket = typesTickets.find(
       (ticket) => ticket.libelle_ticket === value
@@ -181,11 +193,11 @@ const CreateTicket: React.FC = () => {
             title="Parking"
             placeholder="Sélectionnez un parking"
             value={form.id_parking}
-            handleChangeText={(e) => setForm({ ...form, id_parking: e })}
+            handleChangeText={handleParkingChange}
             isDropdown
             options={parkings.map((parking) => ({
               label: parking.nom_parking,
-              value: parking.id_parking.toString(),
+              value: parking.nom_parking
             }))}
             otherStyles="mt-7"
           />
