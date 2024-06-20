@@ -506,3 +506,136 @@ export const updateParking = async (
     throw new Error(error.message);
   }
 };
+
+export const getAllTickets = async (): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.get(`${API_BASE_URL}/tickets`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch tickets");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const addTicket = async (
+  id_parking: number,
+  numero_ticket: string,
+  num_plaque: string,
+  nom: string,
+  prenom: string,
+  is_valid: boolean,
+  code_option: string,
+  debut_validite: string,
+  fin_validite: string
+): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const data = {
+      id_parking,
+      numero_ticket,
+      num_plaque,
+      nom,
+      prenom,
+      is_valid,
+      code_option,
+      debut_validite,
+      fin_validite,
+    };
+
+    let url = `${API_BASE_URL}/tickets`;
+
+    switch (code_option) {
+      case "2":
+        url = `${url}/ticket-congres`;
+        break;
+      case "0":
+        url = `${url}/ticket-gratuit`;
+        break;
+      case "3":
+        url = `${url}/ticket-reduction`;
+        break;
+      default:
+        throw new Error("Invalid ticket type");
+    }
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 201) {
+      Alert.alert("Ticket créé");
+    } else {
+      throw new Error("Invalid response from server");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const updateTicket = async (
+  id_ticket: string,
+  is_valid: boolean,
+  supprimer: boolean
+): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const data = {
+      is_valid,
+      supprimer,
+    };
+
+    const response = await axios.patch(`${API_BASE_URL}/tickets`, data, {
+      params: {
+        id_ticket: id_ticket,
+      },
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to update ticket");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const deleteTicket = async (id_ticket: number): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    await axios.delete(`${API_BASE_URL}/ticket`, {
+      params: {
+        id_ticket: id_ticket,
+      },
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};

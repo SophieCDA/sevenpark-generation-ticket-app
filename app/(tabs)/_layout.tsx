@@ -101,6 +101,29 @@ const TabsLayout: React.FC = () => {
         }}
       />
       <Tabs.Screen
+        name="tickets"
+        options={{
+          title: "Tickets",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.ticket}
+              color={color}
+              name="Tickets"
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="tickets/create"
+        options={{
+          title: "Créer un ticket",
+          headerShown: false,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
         name="users"
         options={{
           title: "Utilisateurs",
