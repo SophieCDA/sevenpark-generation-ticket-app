@@ -3,7 +3,7 @@ import axios from "axios";
 import { Alert } from "react-native";
 
 // const API_BASE_URL = "http://192.168.1.15:5000"; // maison
-const API_BASE_URL = "http://10.81.200.14:5000"; // campus
+const API_BASE_URL = "http://10.81.200.6:5000"; // campus
 
 interface SignInResponse {
   Authorization: string;
@@ -356,6 +356,7 @@ export const getAllParkings = async (): Promise<any> => {
       },
     });
     if (response.status === 200) {
+      console.log(response.data);
       return response.data;
     } else {
       throw new Error("Failed to fetch parkings");
@@ -379,6 +380,128 @@ export const deleteParking = async (id_parking: number): Promise<any> => {
         "Content-Type": "application/json",
       },
     });
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const addParking = async (
+  nom_parking: string,
+  adresse_parking: string,
+  code_postal_parking: string,
+  code_parking: string,
+  id_site: number,
+  ticket_autorise: { id_type_ticket: number; autorise: boolean }[]
+): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const data = {
+      nom_parking,
+      adresse_parking,
+      code_postal_parking,
+      code_parking,
+      id_site,
+      ticket_autorise,
+    };
+
+    const response = await axios.post(`${API_BASE_URL}/parking`, data, {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 201) {
+      Alert.alert("Parking créé");
+    } else {
+      throw new Error("Invalid response from server");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getTypesTickets = async (): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.get(`${API_BASE_URL}/type-tickets`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 200) {
+      console.log(response.data);
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch types tickets");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getParkingTypesTickets = async (): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.get(`${API_BASE_URL}/type-tickets`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 200) {
+      console.log(response.data);
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch types tickets");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const updateParking = async (
+  id_parking: string,
+  nom_parking: string,
+  adresse_parking: string,
+  code_postal_parking: string,
+  code_parking: string,
+  id_site: number,
+  ticket_autorise: { id_type_ticket: number; autorise: boolean }[]
+): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const data = {
+      nom_parking,
+      adresse_parking,
+      code_postal_parking,
+      code_parking,
+      id_site,
+      ticket_autorise,
+    };
+
+    const response = await axios.patch(`${API_BASE_URL}/parking`, data, {
+      params: {
+        id_parking: id_parking,
+      },
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to update parking");
+    }
   } catch (error: any) {
     throw new Error(error.message);
   }

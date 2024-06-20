@@ -57,21 +57,6 @@ const TabsLayout: React.FC = () => {
       }}
     >
       <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon
-              icon={icons.home}
-              color={color}
-              name="Home"
-              focused={focused}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="sites"
         options={{
           title: "Sites",
@@ -105,6 +90,14 @@ const TabsLayout: React.FC = () => {
               focused={focused}
             />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="parkings/create"
+        options={{
+          title: "Créer un parking",
+          headerShown: false,
+          href: null,
         }}
       />
       <Tabs.Screen

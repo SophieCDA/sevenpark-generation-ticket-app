@@ -9,26 +9,31 @@ import {
   Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getAllParkings, deleteParking } from "@/lib/flaskApi";
+import { getAllParkings, deleteParking, getAllSites } from "@/lib/flaskApi";
 import EmptyState from "@/components/EmptyState";
 import { router, useFocusEffect } from "expo-router";
 import CustomButton from "@/components/CustomButton";
-import SiteCard from "@/components/SiteCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SearchInput from "@/components/SearchInput"; // Importer SearchInput
-import UpdateSite from "@/components/UpdateSite";
 import ParkingCard from "@/components/ParkingCard";
+import UpdateParking from "@/components/UpdateParking";
 
 interface Parking {
   id_parking: number;
   nom_parking: string;
   adresse_parking: string;
   code_postal_parking: string;
-  code_parking: number;
+  code_parking: string;
   date_creation: string;
   date_modification: string;
   id_ville: number;
   id_site: number;
+  ticket_autorise: [];
+}
+
+interface Site {
+  id_site: number;
+  nom_site: string;
 }
 
 const Parking = () => {
@@ -36,14 +41,19 @@ const Parking = () => {
   const [editParking, setEditParking] = useState<any>(null);
   const [parkings, setParkings] = useState<Parking[]>([]);
   const [filteredParkings, setFilteredParkings] = useState<Parking[]>([]);
+  const [sites, setSites] = useState<Site[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const sitesData = await getAllSites();
+        setSites(sitesData);
+
         let parkingsData;
         parkingsData = await getAllParkings();
+
         setParkings(parkingsData);
         setFilteredParkings(parkingsData);
       } catch (error) {
@@ -64,11 +74,11 @@ const Parking = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetchSites();
+      refetchParkings();
     }, [])
   );
 
-  const refetchSites = async () => {
+  const refetchParkings = async () => {
     setRefreshing(true);
     try {
       let parkingsData;
@@ -76,7 +86,7 @@ const Parking = () => {
       setParkings(parkingsData);
       setFilteredParkings(parkingsData);
     } catch (error) {
-      Alert.alert("Error", "Failed to refresh sites");
+      Alert.alert("Error", "Failed to refresh parkings");
     } finally {
       setRefreshing(false);
     }
@@ -85,15 +95,16 @@ const Parking = () => {
   const handleDeleteSite = async (id: number) => {
     try {
       await deleteParking(id);
-      refetchSites();
+      refetchParkings();
     } catch (error: any) {
       Alert.alert("Error", error.message);
     }
   };
 
-//   const handleCloseModal = () => {
-//     setEditSite(null);
-//   };
+  const handleCloseModal = () => {
+      setEditParking(null);
+      refetchParkings();
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -103,7 +114,7 @@ const Parking = () => {
           placeholder="Rechercher un parking"
           items={parkings}
           searchKey="nom_parking"
-          onResultsChange={setFilteredParkings} // Mettre à jour les résultats filtrés
+          onResultsChange={setFilteredParkings}
         />
       </View>
 
@@ -113,37 +124,35 @@ const Parking = () => {
         renderItem={({ item }) => (
           <ParkingCard
             parking={item}
+            site={sites}
             onDelete={handleDeleteSite}
             onEdit={(parking) => setEditParking(parking)}
           />
         )}
         ListEmptyComponent={() => (
-          <EmptyState
-            title="Aucun site trouvé"
-            subtitle="Vous pouvez créer un nouveau site"
-          />
+          <EmptyState title="Aucun parking trouvé" subtitle="" />
         )}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refetchSites} />
+          <RefreshControl refreshing={refreshing} onRefresh={refetchParkings} />
         }
       />
       <View className="w-full justify-center px-4 my-6">
         {isAdmin && (
           <CustomButton
-            title="Ajouter un site"
-            handlePress={() => router.push("/sites/create")}
+            title="Ajouter un parking"
+            handlePress={() => router.push("/parkings/create")}
             containerStyles="w-full my-5"
           />
         )}
       </View>
       <StatusBar backgroundColor="#161622" />
-      {/* <Modal visible={!!editSite} onRequestClose={handleCloseModal}>
-        <UpdateSite
-          id_site={editSite?.id_site}
-          site_data={editSite}
+      <Modal visible={!!editParking} onRequestClose={handleCloseModal}>
+        <UpdateParking
+          id_parking={editParking?.id_parking}
+          parking_data={editParking}
           onClose={handleCloseModal}
         />
-      </Modal> */}
+      </Modal>
     </SafeAreaView>
   );
 };

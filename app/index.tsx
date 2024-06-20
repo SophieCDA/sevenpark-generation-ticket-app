@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { useRouter } from "expo-router";
+import { useRouter, Redirect } from "expo-router";
 import { View, Text, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,7 +15,7 @@ const Welcome: React.FC = () => {
     const checkLoginStatus = async () => {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        router.replace("/home");
+        router.replace("/sites");
       } else {
         setIsLoading(false);
       }

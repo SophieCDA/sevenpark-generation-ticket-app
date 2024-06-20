@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
 import icons from "../constants/icons";
 
 interface FormFieldProps {
@@ -15,6 +16,8 @@ interface FormFieldProps {
     | "numeric"
     | "phone-pad"
     | "number-pad";
+  options?: { label: string; value: string }[]; // Ajout des options pour RNPickerSelect
+  isDropdown?: boolean; // Pour différencier si c'est un champ de texte ou un RNPickerSelect
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -25,6 +28,8 @@ const FormField: React.FC<FormFieldProps> = ({
   otherStyles = "",
   isDisabled = false,
   keyboardType = "default",
+  options = [],
+  isDropdown = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -37,16 +42,48 @@ const FormField: React.FC<FormFieldProps> = ({
             isDisabled ? "bg-opacity-50" : ""
           }`}
       >
-        <TextInput
-          className="flex-1 text-white font-psemibold text-base-1"
-          value={value}
-          placeholder={placeholder}
-          placeholderTextColor="#7b7b8b"
-          onChangeText={handleChangeText}
-          secureTextEntry={title === "Mot de passe" && !showPassword}
-          editable={!isDisabled}
-          keyboardType={keyboardType}
-        />
+        {isDropdown ? (
+          <RNPickerSelect
+            onValueChange={(value) =>
+              handleChangeText && handleChangeText(value)
+            }
+            items={options.map((option) => ({
+              label: option.label,
+              value: option.value,
+            }))}
+            placeholder={{ label: placeholder, value: null }}
+            value={value}
+            style={{
+              inputIOS: {
+                color: "white",
+                fontSize: 16,
+                height: "100%",
+                justifyContent: "center",
+                paddingVertical: 12,
+              },
+              inputAndroid: {
+                color: "white",
+                height: "100%",
+                justifyContent: "center",
+                paddingVertical: 12,
+              },
+              placeholder: {
+                color: "#7b7b8b",
+              },
+            }}
+          />
+        ) : (
+          <TextInput
+            className="flex-1 text-white font-psemibold text-base-1"
+            value={value}
+            placeholder={placeholder}
+            placeholderTextColor="#7b7b8b"
+            onChangeText={handleChangeText}
+            secureTextEntry={title === "Mot de passe" && !showPassword}
+            editable={!isDisabled}
+            keyboardType={keyboardType}
+          />
+        )}
         {title === "Mot de passe" && (
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}

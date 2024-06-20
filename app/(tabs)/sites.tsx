@@ -9,7 +9,12 @@ import {
   Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getAllSites, deleteSite, getAllUsers } from "@/lib/flaskApi";
+import {
+  getAllSites,
+  deleteSite,
+  getAllUsers,
+  getUserInfo,
+} from "@/lib/flaskApi";
 import EmptyState from "@/components/EmptyState";
 import { router, useFocusEffect } from "expo-router";
 import CustomButton from "@/components/CustomButton";
@@ -44,7 +49,13 @@ const Sites = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersData = await getAllUsers();
+        let usersData;
+        if (isAdmin) {
+          usersData = await getAllUsers();
+        } else {
+          const currentUser = await getUserInfo();
+          usersData = [currentUser];
+        }
         setUsers(usersData);
 
         let sitesData;

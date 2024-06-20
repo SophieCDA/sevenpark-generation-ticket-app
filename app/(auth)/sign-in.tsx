@@ -30,7 +30,7 @@ const SignIn: React.FC = () => {
     try {
       await signIn(form.identifiant, form.password, form.api_key);
       Alert.alert("Connexion réussie");
-      router.replace("/home");
+      router.replace("/sites");
     } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {

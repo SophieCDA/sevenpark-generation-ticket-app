@@ -96,7 +96,11 @@ const Profile: React.FC = () => {
           <FormField
             title="Clé API : fin de validité"
             placeholder="Clé API"
-            value={new Date(userInfo?.date_fin_validite).toLocaleDateString()}
+            value={
+              userInfo?.date_fin_validite
+                ? userInfo?.date_fin_validite.toString()
+                : "Ilimitée"
+            }
             otherStyles="mt-7"
             isDisabled={true}
           />
