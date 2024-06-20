@@ -65,7 +65,7 @@ const Sites = () => {
         setSites(sitesData);
         setFilteredSites(sitesData);
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch data");
+        console.log("Error", "Failed to fetch data");
       } finally {
         setIsLoading(false);
       }
@@ -94,7 +94,7 @@ const Sites = () => {
       setSites(sitesData);
       setFilteredSites(sitesData);
     } catch (error) {
-      Alert.alert("Error", "Failed to refresh sites");
+      console.log("Error", "Failed to refresh sites");
     } finally {
       setRefreshing(false);
     }

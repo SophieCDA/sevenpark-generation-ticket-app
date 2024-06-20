@@ -57,18 +57,24 @@ const FormField: React.FC<FormFieldProps> = ({
               inputIOS: {
                 color: "white",
                 fontSize: 16,
-                height: "100%",
+                height: "100%", // Ensure it takes the full height
                 justifyContent: "center",
-                paddingVertical: 12,
               },
               inputAndroid: {
                 color: "white",
-                height: "100%",
+                fontSize: 16,
+                height: "100%", // Ensure it takes the full height
                 justifyContent: "center",
-                paddingVertical: 12,
+                paddingLeft: 0, // Adjust padding to align text properly
+                paddingRight: 0, // Adjust padding to align text properly
               },
               placeholder: {
                 color: "#7b7b8b",
+                fontSize: 16,
+              },
+              viewContainer: {
+                flex: 1, // Ensure it takes up available space
+                justifyContent: "center",
               },
             }}
           />

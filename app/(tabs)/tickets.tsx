@@ -53,7 +53,7 @@ const Tickets = () => {
         setTickets(ticketsData);
         setFilteredTickets(ticketsData);
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch data");
+        console.log("Error", "Failed to fetch data");
       } finally {
         setIsLoading(false);
       }
@@ -81,7 +81,7 @@ const Tickets = () => {
       setTickets(ticketsData);
       setFilteredTickets(ticketsData);
     } catch (error) {
-      Alert.alert("Error", "Failed to refresh tickets");
+      console.log("Error", "Failed to refresh tickets");
     } finally {
       setRefreshing(false);
     }

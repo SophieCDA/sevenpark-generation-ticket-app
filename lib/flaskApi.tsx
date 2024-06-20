@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Alert } from "react-native";
 
-// const API_BASE_URL = "http://192.168.1.15:5000"; // maison
-const API_BASE_URL = "http://10.81.200.6:5000"; // campus
+const API_BASE_URL = "http://192.168.1.82:5000"; // maison
+// const API_BASE_URL = "http://10.81.200.6:5000"; // campus
 
 interface SignInResponse {
   Authorization: string;
@@ -98,8 +98,6 @@ export const getAllUsers = async (): Promise<any> => {
     });
     if (response.status === 200) {
       return response.data;
-    } else {
-      throw new Error("Failed to fetch user info");
     }
   } catch (error: any) {
     throw new Error(error.message);
@@ -250,9 +248,7 @@ export const getAllSites = async (): Promise<any> => {
     });
     if (response.status === 200) {
       return response.data;
-    } else {
-      throw new Error("Failed to fetch sites");
-    }
+    } 
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -358,9 +354,7 @@ export const getAllParkings = async (): Promise<any> => {
     if (response.status === 200) {
       console.log(response.data);
       return response.data;
-    } else {
-      throw new Error("Failed to fetch parkings");
-    }
+    } 
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -436,8 +430,6 @@ export const getTypesTickets = async (): Promise<any> => {
     if (response.status === 200) {
       console.log(response.data);
       return response.data;
-    } else {
-      throw new Error("Failed to fetch types tickets");
     }
   } catch (error: any) {
     throw new Error(error.message);

@@ -57,7 +57,7 @@ const Parking = () => {
         setParkings(parkingsData);
         setFilteredParkings(parkingsData);
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch data");
+        console.log("Error", "Failed to fetch data");
       } finally {
         setIsLoading(false);
       }
@@ -86,7 +86,7 @@ const Parking = () => {
       setParkings(parkingsData);
       setFilteredParkings(parkingsData);
     } catch (error) {
-      Alert.alert("Error", "Failed to refresh parkings");
+      console.log("Error", "Failed to refresh parkings");
     } finally {
       setRefreshing(false);
     }
