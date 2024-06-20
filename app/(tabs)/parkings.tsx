@@ -92,7 +92,7 @@ const Parking = () => {
     }
   };
 
-  const handleDeleteSite = async (id: number) => {
+  const handleDeleteParking = async (id: number) => {
     try {
       await deleteParking(id);
       refetchParkings();
@@ -102,8 +102,8 @@ const Parking = () => {
   };
 
   const handleCloseModal = () => {
-      setEditParking(null);
-      refetchParkings();
+    setEditParking(null);
+    refetchParkings();
   };
 
   return (
@@ -125,7 +125,7 @@ const Parking = () => {
           <ParkingCard
             parking={item}
             site={sites}
-            onDelete={handleDeleteSite}
+            onDelete={handleDeleteParking}
             onEdit={(parking) => setEditParking(parking)}
           />
         )}

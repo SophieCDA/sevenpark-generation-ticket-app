@@ -87,6 +87,7 @@ const Users = () => {
 
   const handleCloseModal = () => {
     setEditUser(null);
+    refetchUsers();
   };
 
   return (

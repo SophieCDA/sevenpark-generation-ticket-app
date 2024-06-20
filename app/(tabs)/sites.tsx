@@ -20,7 +20,7 @@ import { router, useFocusEffect } from "expo-router";
 import CustomButton from "@/components/CustomButton";
 import SiteCard from "@/components/SiteCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import SearchInput from "@/components/SearchInput"; // Importer SearchInput
+import SearchInput from "@/components/SearchInput";
 import UpdateSite from "@/components/UpdateSite";
 
 interface Site {
@@ -52,11 +52,12 @@ const Sites = () => {
         let usersData;
         if (isAdmin) {
           usersData = await getAllUsers();
+          setUsers(usersData);
         } else {
           const currentUser = await getUserInfo();
           usersData = [currentUser];
+          setUsers(usersData);
         }
-        setUsers(usersData);
 
         let sitesData;
         sitesData = await getAllSites();

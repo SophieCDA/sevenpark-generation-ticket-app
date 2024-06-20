@@ -77,7 +77,7 @@ const CreateUser: React.FC = () => {
         form.date_fin_validite
       );
       Alert.alert("Succès", "Utilisateur ajouté avec succès");
-      navigation.goBack();
+      router.push("users");
     } catch (error: any) {
       Alert.alert("Erreur", error.message);
     } finally {

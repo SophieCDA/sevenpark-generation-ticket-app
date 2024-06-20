@@ -265,7 +265,7 @@ export const deleteSite = async (id_site: number): Promise<any> => {
 
     await axios.delete(`${API_BASE_URL}/sites`, {
       params: {
-        id_utilisateur: id_site,
+        id_site: id_site,
       },
       headers: {
         Authorization: `${token}`,
