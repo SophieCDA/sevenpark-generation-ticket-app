@@ -21,8 +21,9 @@ interface Form {
 }
 
 interface Parking {
-  id_parking: number;
   nom_parking: string;
+  id_parking: number;
+  ticket_autorise: TypeTicket[];
 }
 
 interface TypeTicket {
@@ -34,7 +35,7 @@ interface TypeTicket {
 const CreateTicket: React.FC = () => {
   const navigation = useNavigation();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [form, setForm] = useState<Form>({
+  const initialFormState: Form = {
     numero_ticket: "",
     num_plaque: "",
     nom: "",
@@ -45,19 +46,16 @@ const CreateTicket: React.FC = () => {
     code_option: "",
     debut_validite: "",
     fin_validite: "",
-  });
+  };
+  const [form, setForm] = useState<Form>(initialFormState);
   const [parkings, setParkings] = useState<Parking[]>([]);
   const [typesTickets, setTypesTickets] = useState<TypeTicket[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [parkingsData, ticketsData] = await Promise.all([
-          getAllParkings(),
-          getTypesTickets(),
-        ]);
+        const parkingsData = await getAllParkings();
         setParkings(parkingsData);
-        setTypesTickets(ticketsData);
       } catch (error: any) {
         Alert.alert("Erreur", error.message);
       }
@@ -86,7 +84,7 @@ const CreateTicket: React.FC = () => {
       return false;
     }
     if (!form.prenom.trim()) {
-      Alert.alert("Erreur", "Le nom est requis");
+      Alert.alert("Erreur", "Le prénom est requis");
       return false;
     }
     if (!form.id_parking.trim()) {
@@ -107,7 +105,6 @@ const CreateTicket: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      console.log(form);
       await addTicket(
         parseInt(form.id_parking),
         form.numero_ticket,
@@ -120,7 +117,7 @@ const CreateTicket: React.FC = () => {
         form.fin_validite
       );
       Alert.alert("Succès", "Ticket ajouté avec succès");
-      router.push("tickets");
+      handleClose();
     } catch (error: any) {
       Alert.alert("Erreur", error.message);
     } finally {
@@ -133,10 +130,11 @@ const CreateTicket: React.FC = () => {
       (parking) => parking.nom_parking === value
     );
     if (selectedParking) {
-      setForm({
-        ...form,
+      setForm((prevForm) => ({
+        ...prevForm,
         id_parking: selectedParking.id_parking.toString(),
-      });
+      }));
+      setTypesTickets(selectedParking.ticket_autorise);
     }
   };
 
@@ -145,16 +143,24 @@ const CreateTicket: React.FC = () => {
       (ticket) => ticket.libelle_ticket === value
     );
     if (selectedTicket) {
-      setForm({
-        ...form,
+      setForm((prevForm) => ({
+        ...prevForm,
         type_ticket: selectedTicket.libelle_ticket,
         code_option: selectedTicket.code_option,
-      });
+      }));
     }
   };
 
   const handleSwitchChange = (field: keyof Form) => (value: boolean) => {
-    setForm({ ...form, [field]: value });
+    setForm((prevForm) => ({
+      ...prevForm,
+      [field]: value,
+    }));
+  };
+
+  const handleClose = () => {
+    setForm(initialFormState); // Réinitialise le formulaire
+    router.push("/tickets");
   };
 
   return (
@@ -192,19 +198,27 @@ const CreateTicket: React.FC = () => {
           <FormField
             title="Parking"
             placeholder="Sélectionnez un parking"
-            value={form.id_parking}
+            value={
+              parkings.find(
+                (parking) => parking.id_parking.toString() === form.id_parking
+              )?.nom_parking || ""
+            }
             handleChangeText={handleParkingChange}
             isDropdown
             options={parkings.map((parking) => ({
               label: parking.nom_parking,
-              value: parking.nom_parking
+              value: parking.nom_parking,
             }))}
             otherStyles="mt-7"
           />
           <FormField
             title="Type de ticket"
             placeholder="Sélectionnez un type de ticket"
-            value={form.type_ticket}
+            value={
+              typesTickets.find(
+                (ticket) => ticket.libelle_ticket === form.type_ticket
+              )?.libelle_ticket || ""
+            }
             handleChangeText={handleTypeTicketChange}
             isDropdown
             options={typesTickets.map((ticket) => ({
@@ -239,6 +253,12 @@ const CreateTicket: React.FC = () => {
             title="Ajouter"
             handlePress={createTicket}
             containerStyles="mt-7"
+            isLoading={isSubmitting}
+          />
+          <CustomButton
+            title="Annuler"
+            handlePress={handleClose}
+            containerStyles="mt-7 bg-warn"
             isLoading={isSubmitting}
           />
         </View>

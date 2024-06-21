@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Alert } from "react-native";
 
-const API_BASE_URL = "http://192.168.1.82:5000"; // maison
-// const API_BASE_URL = "http://10.81.200.6:5000"; // campus
+// const API_BASE_URL = "http://192.168.1.82:5000"; // maison
+const API_BASE_URL = "http://10.81.200.8:5000"; // campus
 
 interface SignInResponse {
   Authorization: string;
@@ -248,7 +248,7 @@ export const getAllSites = async (): Promise<any> => {
     });
     if (response.status === 200) {
       return response.data;
-    } 
+    }
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -354,7 +354,7 @@ export const getAllParkings = async (): Promise<any> => {
     if (response.status === 200) {
       console.log(response.data);
       return response.data;
-    } 
+    }
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -513,6 +513,31 @@ export const getAllTickets = async (): Promise<any> => {
       return response.data;
     } else {
       throw new Error("Failed to fetch tickets");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getTicketByNumTicket = async (
+  numero_ticket: string
+): Promise<any> => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("Token not found");
+
+    const response = await axios.get(`${API_BASE_URL}/tickets`, {
+      params: {
+        numero_ticket: numero_ticket,
+      },
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to fetch ticket");
     }
   } catch (error: any) {
     throw new Error(error.message);

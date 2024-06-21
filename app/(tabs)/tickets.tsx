@@ -5,17 +5,16 @@ import {
   StatusBar,
   RefreshControl,
   Alert,
-  Text,
   Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllTickets, deleteTicket, getAllParkings } from "@/lib/flaskApi";
 import EmptyState from "@/components/EmptyState";
-import { useNavigation, useFocusEffect, router } from "expo-router";
+import { useFocusEffect, router } from "expo-router";
 import CustomButton from "@/components/CustomButton";
 import SearchInput from "@/components/SearchInput";
 import TicketCard from "@/components/TicketCard";
-import UpdateTicket from "@/components/UpdateTicket";
+import TicketQRCodeModal from "@/components/TicketQRCodeModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Ticket {
@@ -34,14 +33,14 @@ interface Parking {
 }
 
 const Tickets = () => {
-  const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
-  const [editTicket, setEditTicket] = useState<any>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<Ticket[]>([]);
   const [parkings, setParkings] = useState<Parking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [showQRCode, setShowQRCode] = useState<boolean>(false);
+  const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,8 +95,14 @@ const Tickets = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    setEditTicket(null);
+  const handleShowQRCode = (num_ticket: string) => {
+    setSelectedTicket(num_ticket);
+    setShowQRCode(true);
+  };
+
+  const handleCloseQRCode = () => {
+    setShowQRCode(false);
+    setSelectedTicket(null);
   };
 
   return (
@@ -120,7 +125,7 @@ const Tickets = () => {
             ticket={item}
             parkings={parkings}
             onDelete={handleDeleteTicket}
-            onEdit={(ticket) => setEditTicket(ticket)}
+            onShowQRCode={handleShowQRCode}
           />
         )}
         ListEmptyComponent={() => (
@@ -140,13 +145,11 @@ const Tickets = () => {
         )}
       </View>
       <StatusBar backgroundColor="#161622" />
-      <Modal visible={!!editTicket} onRequestClose={handleCloseModal}>
-        <UpdateTicket
-          id_ticket={editTicket?.id_ticket}
-          ticket_data={editTicket}
-          onClose={handleCloseModal}
-        />
-      </Modal>
+      <TicketQRCodeModal
+        visible={showQRCode}
+        onClose={handleCloseQRCode}
+        num_ticket={selectedTicket}
+      />
     </SafeAreaView>
   );
 };

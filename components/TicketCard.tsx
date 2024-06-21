@@ -1,48 +1,36 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
+interface Ticket {
+  id_ticket: number;
+  id_parking: number;
+  numero_ticket: string;
+  num_plaque: string;
+  nom: string;
+  is_valid: boolean;
+  supprimer: boolean;
+}
+
+interface Parking {
+  id_parking: number;
+  nom_parking: string;
+}
+
 interface TicketCardProps {
-  ticket: {
-    id_ticket: number;
-    id_parking: number;
-    numero_ticket: string;
-    num_plaque: string;
-    nom: string;
-    is_valid: boolean;
-    supprimer: boolean;
-  };
-  parkings: {
-    id_parking: number;
-    nom_parking: string;
-  }[];
+  ticket: Ticket;
+  parkings: Parking[];
   onDelete: (id: number) => void;
-  onEdit: (ticket: any) => void;
+  onShowQRCode: (num_ticket: string) => void;
 }
 
 const TicketCard: React.FC<TicketCardProps> = ({
   ticket,
   parkings,
   onDelete,
-  onEdit,
+  onShowQRCode,
 }) => {
   const parking = parkings.find((p) => p.id_parking === ticket.id_parking);
-
-  const ticketInfoResponse = `
-    Numéro du ticket : ${ticket.numero_ticket}\n
-    Plaque : ${ticket.num_plaque}\n
-    Nom : ${ticket.nom}\n
-    Valide : ${ticket.is_valid ? "Oui" : "Non"}\n
-    Parking : ${parking ? parking.nom_parking : "Parking non trouvé"}
-  `;
-
-  const handleAlert = () => {
-    Alert.alert("Informations du ticket", ticketInfoResponse);
-  };
-
-  const handleEdit = () => {
-    onEdit(ticket); // Appeler la fonction de modification avec les données du ticket
-  };
 
   const renderRightActions = () => {
     return (
@@ -50,7 +38,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
         style={{
           justifyContent: "space-between",
           alignItems: "center",
-          width: 160,
+          width: 80,
           backgroundColor: "red",
           flexDirection: "row",
         }}
@@ -97,11 +85,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
             </View>
           </View>
           <View className="pt-2">
-            <TouchableOpacity onPress={handleAlert}>
-              <Text className="text-sm text-blue-500">Info</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleEdit}>
-              <Text className="text-sm text-blue-500">Modifier</Text>
+            <TouchableOpacity
+              onPress={() => onShowQRCode(ticket.numero_ticket)}
+            >
+              <Text className="text-sm text-blue-500">Voir QR Code</Text>
             </TouchableOpacity>
           </View>
         </View>
