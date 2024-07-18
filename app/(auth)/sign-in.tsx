@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, Alert } from "react-native";
+import { View, ScrollView, Image, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import images from "../../constants/images";
@@ -19,6 +19,7 @@ const SignIn: React.FC = () => {
     password: "",
     api_key: "",
   });
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const submit = async () => {
@@ -29,7 +30,6 @@ const SignIn: React.FC = () => {
     setIsSubmitting(true);
     try {
       await signIn(form.identifiant, form.password, form.api_key);
-      Alert.alert("Connexion réussie");
       router.replace("/sites");
     } catch (error: any) {
       Alert.alert("Error", error.message);

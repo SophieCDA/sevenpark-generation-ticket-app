@@ -78,7 +78,10 @@ const TicketQRCodeModal: React.FC<TicketQRCodeModalProps> = ({
             <Button title="Fermer" onPress={onClose} />
           </>
         ) : (
-          <Text>Erreur lors du chargement des données du ticket</Text>
+          <View style={styles.details}>
+            <Text>Erreur lors du chargement des données du ticket</Text>
+            <Button title="Fermer" onPress={onClose} />
+          </View>
         )}
       </View>
     </Modal>

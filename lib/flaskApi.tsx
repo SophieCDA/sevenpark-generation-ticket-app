@@ -3,7 +3,7 @@ import axios from "axios";
 import { Alert } from "react-native";
 
 // const API_BASE_URL = "http://192.168.1.82:5000"; // maison
-const API_BASE_URL = "http://10.81.200.8:5000"; // campus
+const API_BASE_URL = "http://10.81.200.9:5000"; // campus
 
 interface SignInResponse {
   Authorization: string;
@@ -643,7 +643,7 @@ export const deleteTicket = async (id_ticket: number): Promise<any> => {
     const token = await AsyncStorage.getItem("token");
     if (!token) throw new Error("Token not found");
 
-    await axios.delete(`${API_BASE_URL}/ticket`, {
+    await axios.delete(`${API_BASE_URL}/tickets`, {
       params: {
         id_ticket: id_ticket,
       },
