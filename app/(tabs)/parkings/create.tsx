@@ -102,14 +102,6 @@ const CreateParking: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      console.log(
-        form.nom_parking,
-        form.adresse_parking,
-        form.code_postal_parking,
-        form.code_parking,
-        parseInt(form.id_site),
-        form.ticket_autorise
-      );
       await addParking(
         form.nom_parking,
         form.adresse_parking,

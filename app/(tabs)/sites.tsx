@@ -64,8 +64,8 @@ const Sites = () => {
 
         setSites(sitesData);
         setFilteredSites(sitesData);
-      } catch (error) {
-        console.log("Error", "Failed to fetch data");
+      } catch (error: any) {
+        Alert.alert("Error", error.message);
       } finally {
         setIsLoading(false);
       }
@@ -93,8 +93,8 @@ const Sites = () => {
       sitesData = await getAllSites();
       setSites(sitesData);
       setFilteredSites(sitesData);
-    } catch (error) {
-      console.log("Error", "Failed to refresh sites");
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
     } finally {
       setRefreshing(false);
     }

@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Alert } from "react-native";
 
-// const API_BASE_URL = "http://192.168.1.82:5000"; // maison
-const API_BASE_URL = "http://10.81.200.9:5000"; // campus
+const API_BASE_URL = "http://192.168.1.82:5000"; // maison
+// const API_BASE_URL = "http://10.81.200.9:5000"; // campus
 
 interface SignInResponse {
   Authorization: string;
@@ -30,7 +30,6 @@ export const signIn = async (
         id_utilisateur,
         is_admin,
       } = response.data;
-      console.log(response.data);
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("nom_utilisateur", nom_utilisateur);
       await AsyncStorage.setItem(
@@ -352,7 +351,6 @@ export const getAllParkings = async (): Promise<any> => {
       },
     });
     if (response.status === 200) {
-      console.log(response.data);
       return response.data;
     }
   } catch (error: any) {
@@ -428,7 +426,6 @@ export const getTypesTickets = async (): Promise<any> => {
       },
     });
     if (response.status === 200) {
-      console.log(response.data);
       return response.data;
     }
   } catch (error: any) {
@@ -447,7 +444,6 @@ export const getParkingTypesTickets = async (): Promise<any> => {
       },
     });
     if (response.status === 200) {
-      console.log(response.data);
       return response.data;
     } else {
       throw new Error("Failed to fetch types tickets");
