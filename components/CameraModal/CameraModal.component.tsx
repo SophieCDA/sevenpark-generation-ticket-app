@@ -29,5 +29,4 @@ const CameraModal: React.FC<CameraModalProps> = ({ visible, onClose, onScan, onM
     );
 };
 
-
 export default CameraModal;

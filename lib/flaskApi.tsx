@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Alert } from "react-native";
 
-const API_BASE_URL = "http://192.168.1.82:5000"; // maison
-// const API_BASE_URL = "http://10.81.200.9:5000"; // campus
+// const API_BASE_URL = "http://192.168.1.82:5000"; // maison
+const API_BASE_URL = "http://10.81.200.2:5000"; // campus
 
 interface SignInResponse {
   Authorization: string;

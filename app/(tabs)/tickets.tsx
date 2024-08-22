@@ -25,7 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PaperProvider, IconButton, Button, Card, Switch } from "react-native-paper";
 import * as Sharing from "expo-sharing";
 import { captureRef } from "react-native-view-shot";
-import { Camera, CameraView } from "expo-camera";
+import { Camera } from "expo-camera";
 import TicketCard from "@/components/TicketCard";
 import CameraModal from "@/components/CameraModal/CameraModal.component";
 
@@ -200,7 +200,7 @@ const Tickets: React.FC = () => {
       Alert.alert("Erreur", "Permission refusée");
     }
   };
-
+  
   const handleManualScan = () => {
     setScanned(true); 
   };

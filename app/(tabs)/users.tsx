@@ -8,7 +8,7 @@ import {
   Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getAllUsers, deleteUser, getCurrentUser } from "@/lib/flaskApi";
+import { getAllUsers, deleteUser } from "@/lib/flaskApi";
 import EmptyState from "@/components/EmptyState";
 import { router, useFocusEffect } from "expo-router";
 import UserCard from "@/components/UserCard";
